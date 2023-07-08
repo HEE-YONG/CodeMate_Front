@@ -27,15 +27,15 @@
 }
 
 #append {
-    width: 20px;
-    padding: 8px 20px;
+    width: 40px;
+    padding: 8px 10px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
 
 #ai {
-    width: 20px;
-    padding: 8px 20px;
+    width: 40px;
+    padding: 8px 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -43,4 +43,50 @@
 .codemate-content {
     width: 480px;
     height: 600px;
+}
+
+.modal-body {
+    display: flex;
+    height: 480px;
+}
+
+.modal-chat {
+    height: 100%;
+    margin-left: 20px;
+    flex-grow: 1;
+}
+
+.modal-chat-content {
+    height: 100%;
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+}
+
+.modal-chat-write {
+    height: 50px;
+    width: 96%;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+#chat-write {
+    height: 100%;
+    flex-grow: 1;
+}
+
+#chat-submit {
+    position: absolute;
+    border-radius: 10px;
+    width: 75px;
+    height: 35px;
+    margin-right: 5px;
 }
