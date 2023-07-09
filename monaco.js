@@ -1,18 +1,18 @@
 var editor;
 
 require.config({
-    paths: {
-        vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs",
-    },
+  paths: {
+    vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs",
+  },
 });
 
 require(["vs/editor/editor.main"], function () {
-    editor = monaco.editor.create(document.getElementById("monaco"), {
-        theme: "vs-dark",
-        automaticLayout: true,
-        language: "c",
-        value: ["int main() {", "", "}"].join("\n"),
-    });
+  editor = monaco.editor.create(document.querySelector(".monaco"), {
+    theme: "vs-dark",
+    automaticLayout: true,
+    language: "c",
+    value: ["int main() {", "", "}"].join("\n"),
+  });
 });
 
 var myModalEl = document.getElementById("staticBackdrop");
