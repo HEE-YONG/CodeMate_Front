@@ -52,7 +52,7 @@ $(document).ready(function () {
 });
 
 function isValidTabName(tabName) {
-  var validExtensions = [".c", ".py", ".java"];
-  var extension = tabName.substring(tabName.lastIndexOf("."));
-  return validExtensions.includes(extension);
+    var validExtensions = [".c", ".py", ".java"];
+    var extension = tabName.substring(tabName.lastIndexOf("."));
+    return validExtensions.includes(extension);
 }
