@@ -8,7 +8,7 @@ window.onload = function () {
   $("#table4").hide();
 };
 $(document).ready(function () {
-  $("#tab1").click(function () {
+  $("#index_tab1").click(function () {
     $("#table1").show();
     $("#table2").hide();
     $("#table3").hide();
@@ -23,16 +23,16 @@ $(document).ready(function () {
     } while (tabName && !isValidTabName(tabName)); // 유효한 탭 이름이 아닐 경우 반복해서 입력 받기
 
     if (tabName) {
-      var tabID = "tab" + tabCount; // 탭의 고유 ID 생성
+      var tabID = "index_tab" + tabCount; // 탭의 고유 ID 생성
       var newButton = $("<button>")
         .attr("type", "button")
         .attr("id", tabID)
         .text(tabName);
-      $("#tab1").after(newButton); // 탭 버튼을 Default.c 버튼과 + 버튼 사이에 삽입
+      $("#index_tab1").after(newButton); // 탭 버튼을 Default.c 버튼과 + 버튼 사이에 삽입
       tabCount++; // 탭 카운트 증가
     }
   });
-  $("#console").click(function () {
+  $("#index_console").click(function () {
     $("#table1").hide();
     $("#table2").hide();
     $("#table3").show();
