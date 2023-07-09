@@ -16,19 +16,48 @@ require(["vs/editor/editor.main"], function () {
 });
 
 var myModalEl = document.getElementById("staticBackdrop");
+var editorReadOnly;
 
 myModalEl.addEventListener("show.bs.modal", function (event) {
-    var modalCode = document.querySelector(".modal-code");
-    var editorCode = editor.getValue();
-
-    var editorReadOnly = monaco.editor.create(
+    editorReadOnly = monaco.editor.create(
         document.getElementById("monaco-read-only"),
         {
             theme: "vs-dark",
             automaticLayout: true,
             language: "c",
-            value: editorCode,
+            value: editor.getValue(),
             readOnly: true,
         }
     );
+});
+
+function submitChat() {
+    var $chat = $("#chat-write");
+
+    if ($chat.val()) {
+        $(".modal-chat-content").append(
+            $("<div>")
+                .prop({
+                    className: "user-chat",
+                })
+                .prepend($("<div>").text("<"))
+                .prepend($("<div>").text($chat.val()))
+        );
+
+        $chat.val("");
+    }
+}
+
+$("#clearBtn").click(function () {
+    $(".modal-chat-content").empty();
+});
+
+$(".btn-close").click(function () {
+    editorReadOnly.dispose();
+});
+
+$("#chat-write").keydown(function (event) {
+    if (event.key === "Enter") {
+        submitChat();
+    }
 });
