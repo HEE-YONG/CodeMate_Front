@@ -19,45 +19,45 @@ var myModalEl = document.getElementById("staticBackdrop");
 var editorReadOnly;
 
 myModalEl.addEventListener("show.bs.modal", function (event) {
-    editorReadOnly = monaco.editor.create(
-        document.getElementById("monaco-read-only"),
-        {
-            theme: "vs-dark",
-            automaticLayout: true,
-            language: "c",
-            value: editor.getValue(),
-            readOnly: true,
-        }
-    );
+  editorReadOnly = monaco.editor.create(
+    document.getElementById("monaco-read-only"),
+    {
+      theme: "vs-dark",
+      automaticLayout: true,
+      language: "c",
+      value: editor.getValue(),
+      readOnly: true,
+    }
+  );
 });
 
 function submitChat() {
-    var $chat = $("#chat-write");
+  var $chat = $("#chat-write");
 
-    if ($chat.val()) {
-        $(".modal-chat-content").append(
-            $("<div>")
-                .prop({
-                    className: "user-chat",
-                })
-                .prepend($("<div>").text("<"))
-                .prepend($("<div>").text($chat.val()))
-        );
+  if ($chat.val()) {
+    $(".modal-chat-content").append(
+      $("<div>")
+        .prop({
+          className: "user-chat",
+        })
+        .prepend($("<div>").text("<"))
+        .prepend($("<div>").text($chat.val()))
+    );
 
-        $chat.val("");
-    }
+    $chat.val("");
+  }
 }
 
 $("#clearBtn").click(function () {
-    $(".modal-chat-content").empty();
+  $(".modal-chat-content").empty();
 });
 
 $(".btn-close").click(function () {
-    editorReadOnly.dispose();
+  editorReadOnly.dispose();
 });
 
 $("#chat-write").keydown(function (event) {
-    if (event.key === "Enter") {
-        submitChat();
-    }
+  if (event.key === "Enter") {
+    submitChat();
+  }
 });
