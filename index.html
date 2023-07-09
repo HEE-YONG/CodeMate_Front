@@ -1,46 +1,82 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <div class="codemate">
-      <div class="buttonbox">
-        <div class="buttonbox-left">
-          <button type="button" id="btn_1">Default.c</button>
-          <button type="button" id="append">+</button>
-        </div>
-        <div class="buttonbox-right">
-          <button type="button" id="console">Console</button>
-          <button type="button" id="ai">
-            <img src="images/AI3.png" style="width: 17px" />
-          </button>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="codemate">
+    <div class="buttonbox">
+      <div class="buttonbox-left">
+        <button type="button" id="btn_1">Default.c</button>
+        <button type="button" id="append">+</button>
       </div>
-
-      <div style="clear: both"></div>
-      <div class="codemate-content">
-        <div id="table1">
-          <div id="monaco" style="height: 600px"></div>
-        </div>
-        <div id="table2">2</div>
-        <div id="table3">3</div>
-        <div id="table4">4</div>
+      <div class="buttonbox-right">
+        <button type="button" id="console">Console</button>
+        <button type="button" id="ai" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+          <img src="images/AI3.png" style="width: 20px" />
+        </button>
       </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.js"></script>
-
-      <script src="monaco.js"></script>
-      <script src="tab.js"></script>
     </div>
-  </body>
+
+    <div style="clear: both"></div>
+    <div class="codemate-content">
+      <div id="table1">
+        <div id="monaco" style="height: 600px"></div>
+      </div>
+      <div id="table2">2</div>
+      <div id="table3">3</div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">AI에게 질문하기</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-code">
+            <div id="monaco-read-only" style="height: 450px; width: 400px;">
+
+            </div>
+          </div>
+          <div class="modal-chat">
+            <div class="modal-chat-content">
+              <div class="modal-chat-write">
+                <input id="chat-write" type="text">
+                <button id="chat-submit">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.js"></script>
+
+  <script src="monaco.js"></script>
+  <script src="tab.js"></script>
+
+</body>
+
 </html>
