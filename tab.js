@@ -14,12 +14,13 @@ $(document).ready(function () {
         var tabName;
         do {
             tabName = prompt(
-                "생성할 탭의 이름을 언어에 맞게 입력해주세요.\n예시) hello.c, hello.py, hello.java\n※ C, Python, Java 컴파일 기능만 제공"
+                "생성할 탭의 이름을 언어에 맞게 입력해주세요.\n예시) hello.c, hello.c++, hello.py, hello.java\n※ C, c++, Python, Java 컴파일 기능만 제공"
             ); // 프롬프트로 탭 이름 입력받기
         } while (tabName && !isValidTabName(tabName)); // 유효한 탭 이름이 아닐 경우 반복해서 입력 받기
 
         if (tabName) {
             var tabID = "tab" + tabCount; // 탭의 고유 ID 생성
+            //var editorID = "editor" + tabCount; // 고유한 editor ID 생성
 
             var newButton = $("<button>")
                 .attr("type", "button")
@@ -32,9 +33,9 @@ $(document).ready(function () {
 
             var newTabDiv = $("<div>").attr("id", tabID).show(); // 새로운 탭의 div 태그 생성
             var newEditorDiv = $("<div>")
-                .addClass("monaco")
+                .attr("id", "monaco" + "_tab" + tabCount)
                 .css("height", "600px"); // 탭 내용을 표시할 div 태그 생성
-            newTabDiv.append(newEditorDiv); // 탭 div에 내용 div 추가       //확인을 위해서 hello추가 //현재 div가 생성은 되지만 monaco가 적용되지 않음
+            newTabDiv.append(newEditorDiv); // 탭 div에 내용 div 추가
             $("#tab_console").before(newTabDiv); // 탭 div를 "tab_console" 태그 위에 추가
 
             // 새로운 탭 클릭 시 해당 탭 보여주기
@@ -42,6 +43,17 @@ $(document).ready(function () {
                 $(".codemate-content > div").hide();
                 newTabDiv.show();
             });
+
+            var language = tabName.substring(tabName.lastIndexOf(".") + 1); // 탭 확장자로 language 설정
+            var editor = monaco.editor.create(
+                document.querySelector("#monaco" + "_tab" + tabCount),
+                {
+                    theme: "vs-dark",
+                    automaticLayout: true,
+                    language: language,
+                    value: ["int main() {", "", "}"].join("\n"),
+                }
+            );
 
             tabCount++; // 탭 카운트 증가
         }
@@ -54,7 +66,7 @@ $(document).ready(function () {
 });
 
 function isValidTabName(tabName) {
-    var validExtensions = [".c", ".py", ".java"];
+    var validExtensions = [".c", ".py", ".java", ".c++"];
     var extension = tabName.substring(tabName.lastIndexOf("."));
     return validExtensions.includes(extension);
 }
@@ -67,13 +79,15 @@ require.config({
 });
 
 require(["vs/editor/editor.main"], function () {
-    editor = monaco.editor.create(document.querySelector(".monaco"), {
+    editor = monaco.editor.create(document.querySelector("#monaco_tab1"), {
         theme: "vs-dark",
         automaticLayout: true,
         language: "c",
         value: ["int main() {", "", "}"].join("\n"),
     });
 });
+
+/**************************** AI Modal *****************************/
 
 var myModalEl = document.getElementById("staticBackdrop");
 var editorReadOnly;
