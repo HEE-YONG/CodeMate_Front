@@ -1,5 +1,7 @@
 var editor;
 var tabCount = 2; // 탭 카운트 변수 초기화
+var currentTab = "tab1";
+var editors = [];
 
 window.onload = function () {
     $("#tab1").show();
@@ -7,8 +9,10 @@ window.onload = function () {
 };
 $(document).ready(function () {
     $("#index_tab1").click(function () {
-        $(".codemate-content > div").hide();
+        $(".tabs > div").hide();
+        $(".footer").show();
         $("#tab1").show();
+        currentTab = "tab1";
     });
     $("#append").click(function () {
         var tabName;
@@ -29,7 +33,7 @@ $(document).ready(function () {
             $("#append").before(newButton); // 탭 버튼을 Default.c 버튼과 "+" 버튼 사이에 삽입
 
             // 기존 탭 숨김 처리
-            $(".codemate-content > div").hide();
+            $(".tabs > div").hide();
 
             var newTabDiv = $("<div>").attr("id", tabID).show(); // 새로운 탭의 div 태그 생성
             var newEditorDiv = $("<div>")
@@ -40,8 +44,10 @@ $(document).ready(function () {
 
             // 새로운 탭 클릭 시 해당 탭 보여주기
             newButton.click(function () {
-                $(".codemate-content > div").hide();
+                $(".tabs > div").hide();
+                $(".footer").show();
                 newTabDiv.show();
+                currentTab = newTabDiv.attr("id");
             });
 
             var language = tabName.substring(tabName.lastIndexOf(".") + 1); // 탭 확장자로 language 설정
@@ -55,12 +61,17 @@ $(document).ready(function () {
                 }
             );
 
+            currentTab = newTabDiv.attr("id");
+            editors.push(editor);
+
             tabCount++; // 탭 카운트 증가
         }
     });
 
     $("#index_console").click(function () {
-        $(".codemate-content > div").hide();
+        currentTab = "tab_console";
+        $(".tabs > div").hide();
+        $(".footer").hide();
         $("#tab_console").show();
     });
 });
@@ -85,6 +96,8 @@ require(["vs/editor/editor.main"], function () {
         language: "c",
         value: ["int main() {", "", "}"].join("\n"),
     });
+
+    editors.push(editor);
 });
 
 /**************************** AI Modal *****************************/
@@ -93,13 +106,16 @@ var myModalEl = document.getElementById("staticBackdrop");
 var editorReadOnly;
 
 myModalEl.addEventListener("show.bs.modal", function (event) {
+    var currentTabNum = currentTab[currentTab.length - 1];
+    var currentEditorValue = editors[currentTabNum - 1].getValue();
+
     editorReadOnly = monaco.editor.create(
         document.getElementById("monaco-read-only"),
         {
             theme: "vs-dark",
             automaticLayout: true,
             language: "c",
-            value: editor.getValue(),
+            value: currentEditorValue,
             readOnly: true,
         }
     );
@@ -135,3 +151,36 @@ $("#chat-write").keydown(function (event) {
         submitChat();
     }
 });
+
+/**************************** Slide-Window *****************************/
+
+function toggleSlideWindow() {
+    const slideContainer = document.querySelector(".slide-container");
+    const slideBtn = document.getElementById("btn_input_slide");
+    const slideTextarea = document.getElementById("input_text");
+
+    slideContainer.classList.toggle("open");
+    slideBtn.classList.toggle("open");
+    slideTextarea.classList.toggle("open");
+}
+
+/**************************** buttons *****************************/
+
+$("#btn_export").click(function () {});
+$("#btn_capture").click(function () {});
+$("#btn_copy").click(function () {
+    currentTabNum = currentTab[currentTab.length - 1];
+    currentEditorValue = editors[currentTabNum - 1].getValue();
+
+    var tempInputElement = document.createElement("textarea");
+    tempInputElement.value = currentEditorValue;
+
+    document.body.appendChild(tempInputElement);
+    tempInputElement.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInputElement);
+
+    alert("값이 복사되었습니다.");
+});
+
+$("#btn_run").click(function () {});
