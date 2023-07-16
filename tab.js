@@ -106,13 +106,16 @@ var myModalEl = document.getElementById("staticBackdrop");
 var editorReadOnly;
 
 myModalEl.addEventListener("show.bs.modal", function (event) {
+    var currentTabNum = currentTab[currentTab.length - 1];
+    var currentEditorValue = editors[currentTabNum - 1].getValue();
+
     editorReadOnly = monaco.editor.create(
         document.getElementById("monaco-read-only"),
         {
             theme: "vs-dark",
             automaticLayout: true,
             language: "c",
-            value: editor.getValue(),
+            value: currentEditorValue,
             readOnly: true,
         }
     );
