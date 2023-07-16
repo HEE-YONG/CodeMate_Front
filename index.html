@@ -30,14 +30,45 @@
       </div>
     </div>
 
-      <div style="clear: both"></div>
-      <div class="codemate-content">
+    <div style="clear: both"></div>
+    <div class="codemate-content">
+      <div class="tabs">
         <div id="tab1">
           <div id="monaco_tab1" style="height: 600px"></div>
         </div>
         <div id="tab_console">3</div>
       </div>
+
+      <div class="footer">
+        <div class="btn-group">
+          <a id="btn_export">
+            <img src="images/Export.png">
+          </a>
+          <a id="btn_capture">
+            <img src="images/Capture.png">
+          </a>
+          <a id="btn_copy">
+            <img src="images/Copy.png">
+          </a>
+          <button id="btn_input" onclick="toggleSlideWindow()">
+            Input
+          </button>
+        </div>
+        <div class="run">
+          <button id="btn_run">Run</button>
+        </div>
+      </div>
+
+      <div class="slide-container">
+        <button id="btn_input_slide" onclick="toggleSlideWindow()">
+          Input
+        </button>
+        <textarea name="input_text" id="input_text"></textarea>
+      </div>
+
     </div>
+
+
   </div>
 
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -58,6 +89,10 @@
             <div class="modal-chat-content">
             </div>
             <div class="modal-chat-write">
+              <div class="modal-chat-btn">
+                <button id="modal-chat-btn1">이 코드의 오류를 찾아줘.</button>
+                <button id="modal-chat-btn2">이 코드는 어떻게 작동돼?</button>
+              </div>
               <input id="chat-write" type="text" />
               <button id="chat-submit" onclick="submitChat()">Submit</button>
             </div>
