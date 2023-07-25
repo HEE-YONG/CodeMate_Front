@@ -6,6 +6,14 @@ var editors = [];
 window.onload = function () {
     $("#tab1").show();
     $("#tab_console").hide();
+    // 캡쳐 버튼 클릭 이벤트 등록
+    document
+        .getElementById("btn_capture")
+        .addEventListener("click", function (e) {
+            // 마우스 커서 모양 변경 (eidt_cursor 클래스 추가)
+            document.querySelector("body").classList.add("edit_cursor");
+            screenshot(e);
+        });
 };
 $(document).ready(function () {
     $("#index_tab1").click(function () {
@@ -18,7 +26,7 @@ $(document).ready(function () {
         var tabName;
         do {
             tabName = prompt(
-                "생성할 탭의 이름을 언어에 맞게 입력해주세요.\n예시) hello.c, hello.c++, hello.py, hello.java\n※ C, c++, Python, Java 컴파일 기능만 제공"
+                "생성할 탭의 이름을 언어에 맞게 입력해주세요.\n예시) hello.c, hello.cpp, hello.py, hello.java\n※ C, C++, Python, Java 컴파일 기능만 제공"
             ); // 프롬프트로 탭 이름 입력받기
         } while (tabName && !isValidTabName(tabName)); // 유효한 탭 이름이 아닐 경우 반복해서 입력 받기
 
@@ -51,6 +59,9 @@ $(document).ready(function () {
             });
 
             var language = tabName.substring(tabName.lastIndexOf(".") + 1); // 탭 확장자로 language 설정
+            if (language == "py") {
+                language = "python";
+            }
             var editor = monaco.editor.create(
                 document.querySelector("#monaco" + "_tab" + tabCount),
                 {
@@ -77,7 +88,7 @@ $(document).ready(function () {
 });
 
 function isValidTabName(tabName) {
-    var validExtensions = [".c", ".py", ".java", ".c++"];
+    var validExtensions = [".c", ".py", ".java", ".cpp"];
     var extension = tabName.substring(tabName.lastIndexOf("."));
     return validExtensions.includes(extension);
 }
@@ -167,7 +178,7 @@ function toggleSlideWindow() {
 /**************************** buttons *****************************/
 
 $("#btn_export").click(function () {});
-$("#btn_capture").click(function () {});
+
 $("#btn_copy").click(function () {
     currentTabNum = currentTab[currentTab.length - 1];
     currentEditorValue = editors[currentTabNum - 1].getValue();
@@ -195,3 +206,98 @@ $("#btn_copy").click(function () {
 });
 
 $("#btn_run").click(function () {});
+
+/**************************** capture button *****************************/
+
+function screenshot(e) {
+    var startX, startY;
+    var height = window.innerHeight;
+    var width = window.innerWidth;
+
+    // 배경을 어둡게 깔아주기 위한 div 객체 생성
+    var $screenBg = document.createElement("div");
+    $screenBg.id = "screenshot_background";
+    $screenBg.style.borderWidth = "0 0 " + height + "px 0";
+
+    // 마우스 이동하면서 선택한 영역의 크기를 보여주기 위한 div 객체 생성
+    var $screenshot = document.createElement("div");
+    $screenshot.id = "screenshot";
+
+    document.querySelector("body").appendChild($screenBg);
+    document.querySelector("body").appendChild($screenshot);
+
+    var selectArea = false;
+    var body = document.querySelector("body");
+
+    // 마우스 누르는 이벤트 함수
+    var mousedown = function (e) {
+        e.preventDefault();
+        selectArea = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        // 이벤트를 실행하면서 이벤트 삭제 (한번만 동작하도록)
+        body.removeEventListener("mousedown", mousedown);
+    };
+    // 마우스 누르는 이벤트 등록
+    body.addEventListener("mousedown", mousedown);
+
+    // 클릭한 마우스 떼는 이벤트 함수
+    var mouseup = function (e) {
+        selectArea = false;
+        // (초기화) 마우스 떼면서 마우스무브 이벤트 삭제
+        body.removeEventListener("mousemove", mousemove);
+        // (초기화) 스크린샷을 위해 생성한 객체 삭제
+        $screenshot.parentNode.removeChild($screenshot);
+        $screenBg.parentNode.removeChild($screenBg);
+        var x = e.clientX;
+        var y = e.clientY;
+        var top = Math.min(y, startY);
+        var left = Math.min(x, startX);
+        var width = Math.max(x, startX) - left;
+        var height = Math.max(y, startY) - top;
+        html2canvas(document.body, {
+            // 캡쳐 영역을 지정하여 캡쳐
+            x: left,
+            y: top,
+            width: width,
+            height: height,
+        }).then(function (canvas) {
+            save(canvas); // crop한 이미지 저장
+        });
+        body.removeEventListener("mouseup", mouseup);
+        // 마우스 커서 기본으로 변경
+        document.querySelector("body").classList.remove("edit_cursor");
+    };
+    body.addEventListener("mouseup", mouseup);
+
+    // 마우스무브 이벤트 함수
+    function mousemove(e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        $screenshot.style.left = x;
+        $screenshot.style.top = y;
+        if (selectArea) {
+            //캡쳐 영역 선택 그림
+            var top = Math.min(y, startY);
+            var right = width - Math.max(x, startX);
+            var bottom = height - Math.max(y, startY);
+            var left = Math.min(x, startX);
+            $screenBg.style.borderWidth =
+                top + "px " + right + "px " + bottom + "px " + left + "px";
+        }
+    }
+    body.addEventListener("mousemove", mousemove);
+
+    // 캡쳐한 이미지 저장
+    function save(canvas) {
+        if (navigator.msSaveBlob) {
+            var blob = canvas.msToBlob();
+            return navigator.msSaveBlob(blob, "파일명.jpg");
+        } else {
+            var el = document.getElementById("captureImg");
+            el.href = canvas.toDataURL("image/jpeg");
+            el.download = "파일명.jpg";
+            el.click();
+        }
+    }
+}
