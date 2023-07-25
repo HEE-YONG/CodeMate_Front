@@ -191,7 +191,18 @@ $("#btn_copy").click(function () {
     document.execCommand("copy");
     document.body.removeChild(tempInputElement);
 
-    alert("값이 복사되었습니다.");
+    let removeToast;
+    const toast = document.getElementById("toast");
+
+    toast.classList.contains("reveal")
+        ? (clearTimeout(removeToast),
+          (removeToast = setTimeout(function () {
+              document.getElementById("toast").classList.remove("reveal");
+          }, 1000)))
+        : (removeToast = setTimeout(function () {
+              document.getElementById("toast").classList.remove("reveal");
+          }, 1000));
+    toast.classList.add("reveal"), (toast.innerText = "복사되었습니다.");
 });
 
 $("#btn_run").click(function () {});
