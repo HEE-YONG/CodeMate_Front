@@ -37,7 +37,14 @@ $(document).ready(function () {
             var newButton = $("<button>")
                 .attr("type", "button")
                 .attr("id", "index_" + tabID)
+                .addClass("leftTab")
                 .text(tabName);
+
+            // 탭 버튼 내에 닫기 아이콘을 추가
+            var closeIcon = $("<img>")
+                .attr("src", "images/Close.png")
+                .addClass("closeTab");
+            newButton.append(closeIcon);
             $("#append").before(newButton); // 탭 버튼을 Default.c 버튼과 "+" 버튼 사이에 삽입
 
             // 기존 탭 숨김 처리
@@ -85,6 +92,13 @@ $(document).ready(function () {
         $(".footer").hide();
         $("#tab_console").show();
     });
+});
+// 동적으로 생성된 closeIcon을 클릭했을 때 탭을 삭제
+$(".buttonbox-left").on("click", ".closeTab", function () {
+    var deleteIndexID = $(this).parent().attr("id");
+    var deleteTabID = deleteIndexID.substring(6);
+    $("#" + deleteIndexID).remove();
+    $("#" + deleteTabID).remove();
 });
 
 function isValidTabName(tabName) {
