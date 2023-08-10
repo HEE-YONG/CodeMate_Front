@@ -2,6 +2,7 @@ var editor;
 var tabCount = 2; // 탭 카운트 변수 초기화
 var currentTab = "tab1";
 var editors = [];
+let filenames = ["Default.c"];
 
 window.onload = function () {
     $("#tab1").show();
@@ -68,19 +69,46 @@ $(document).ready(function () {
             var language = tabName.substring(tabName.lastIndexOf(".") + 1); // 탭 확장자로 language 설정
             if (language == "py") {
                 language = "python";
+                var editor = monaco.editor.create(
+                    document.querySelector("#monaco" + "_tab" + tabCount),
+                    {
+                        theme: "vs-dark",
+                        automaticLayout: true,
+                        language: language,
+                        value: "",
+                    }
+                );
+            } else if (language == "c" || language == "cpp") {
+                var editor = monaco.editor.create(
+                    document.querySelector("#monaco" + "_tab" + tabCount),
+                    {
+                        theme: "vs-dark",
+                        automaticLayout: true,
+                        language: language,
+                        value: ["int main() {", "", "}"].join("\n"),
+                    }
+                );
+            } else if (language == "java") {
+                var editor = monaco.editor.create(
+                    document.querySelector("#monaco" + "_tab" + tabCount),
+                    {
+                        theme: "vs-dark",
+                        automaticLayout: true,
+                        language: language,
+                        value: [
+                            "public class " + tabName.split(".")[0] + " {",
+                            "   public static void main (String[] args) {",
+                            "",
+                            "   }",
+                            "}",
+                        ].join("\n"),
+                    }
+                );
             }
-            var editor = monaco.editor.create(
-                document.querySelector("#monaco" + "_tab" + tabCount),
-                {
-                    theme: "vs-dark",
-                    automaticLayout: true,
-                    language: language,
-                    value: ["int main() {", "", "}"].join("\n"),
-                }
-            );
 
             currentTab = newTabDiv.attr("id");
             editors.push(editor);
+            filenames.push(tabName);
 
             tabCount++; // 탭 카운트 증가
         }
@@ -93,6 +121,7 @@ $(document).ready(function () {
         $("#tab_console").show();
     });
 });
+
 // 동적으로 생성된 closeIcon을 클릭했을 때 탭을 삭제
 $(".buttonbox-left").on("click", ".closeTab", function () {
     var deleteIndexID = $(this).parent().attr("id");
@@ -191,7 +220,22 @@ function toggleSlideWindow() {
 
 /**************************** buttons *****************************/
 
-$("#btn_export").click(function () {});
+$("#btn_export").click(function () {
+    currentTabNum = currentTab[currentTab.length - 1];
+    currentEditorValue = editors[currentTabNum - 1].getValue();
+
+    var blob = new Blob([currentEditorValue], {
+        type: "text/plain;charset=utf-8",
+    });
+    var url = window.URL.createObjectURL(blob);
+
+    var downloadLink = document.getElementById("download_link");
+    downloadLink.href = url;
+    downloadLink.download = filenames[currentTabNum - 1];
+    downloadLink.click();
+
+    window.URL.revokeObjectURL(url);
+});
 
 $("#btn_copy").click(function () {
     currentTabNum = currentTab[currentTab.length - 1];
@@ -219,7 +263,36 @@ $("#btn_copy").click(function () {
     toast.classList.add("reveal"), (toast.innerText = "복사되었습니다.");
 });
 
-$("#btn_run").click(function () {});
+$("#btn_run").click(function () {
+    currentTabNum = currentTab[currentTab.length - 1];
+    currentEditorValue = editors[currentTabNum - 1].getValue();
+
+    var blob = new Blob([currentEditorValue], {
+        type: "text/plain;charset=utf-8",
+    });
+
+    var InputData = $("#input_text").val;
+
+    var formData = new FormData();
+    formData.append("file", blob, filenames[currentTabNum - 1]);
+    formData.append("inputData", InputData);
+
+    $.ajax({
+        url: serverURL,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log("전송 성공!");
+            console.log(response);
+        },
+        error: function (error) {
+            console.error("전송 실패!");
+            console.error(error);
+        },
+    });
+});
 
 /**************************** capture button *****************************/
 
@@ -304,14 +377,25 @@ function screenshot(e) {
 
     // 캡쳐한 이미지 저장
     function save(canvas) {
-        if (navigator.msSaveBlob) {
-            var blob = canvas.msToBlob();
-            return navigator.msSaveBlob(blob, "파일명.jpg");
-        } else {
-            var el = document.getElementById("captureImg");
-            el.href = canvas.toDataURL("image/jpeg");
-            el.download = "파일명.jpg";
-            el.click();
-        }
+        canvas.toBlob(function (blob) {
+            var formData = new FormData();
+            formData.append("imageFile", blob, "test.jpg");
+
+            $.ajax({
+                url: serverURL,
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("전송 성공!");
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.error("전송 실패!");
+                    console.error(error);
+                },
+            });
+        }, "image/jpeg");
     }
 }
