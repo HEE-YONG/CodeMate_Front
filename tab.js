@@ -271,11 +271,25 @@ $("#btn_run").click(function () {
         type: "text/plain;charset=utf-8",
     });
 
-    var InputData = $("#input_text").val;
+    var InputData = $("#input_text").val();
+
+    var InputBlob = new Blob([InputData], {
+        type: "text/plain;charset=utf-8",
+    });
 
     var formData = new FormData();
     formData.append("file", blob, filenames[currentTabNum - 1]);
-    formData.append("inputData", InputData);
+    formData.append("input", InputBlob, "input.txt");
+
+    var serverURL = "http://13.209.237.234";
+
+    if (filenames[currentTabNum - 1].split(".")[1] == "py")
+        serverURL += "/python/compile";
+    else if (filenames[currentTabNum - 1].split(".")[1] == "java")
+        serverURL += "/java/compile";
+    else {
+        serverURL += "/c/compile";
+    }
 
     $.ajax({
         url: serverURL,
