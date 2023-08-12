@@ -338,8 +338,12 @@ $("#btn_run").click(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log("전송 성공!");
-            console.log(response);
+            currentTab = "tab_console";
+            $(".tabs > div").hide();
+            $(".footer").hide();
+            $("#tab_console").show();
+            if (response) $("#console_output").text(response.result);
+            else $("#console_output").text("입력값을 확인해 주세요.");
         },
         error: function (error) {
             console.error("전송 실패!");
