@@ -3,6 +3,9 @@ var tabCount = 2; // 탭 카운트 변수 초기화
 var currentTab = "tab1";
 var editors = [];
 let filenames = ["Default.c"];
+var tabs = ["tab1"];
+var deleteIndexID;
+var deleteTabID;
 
 window.onload = function () {
     $("#tab1").show();
@@ -21,6 +24,8 @@ $(document).ready(function () {
         $(".tabs > div").hide();
         $(".footer").show();
         $("#tab1").show();
+        $(".leftTab").removeClass("selected-tab");
+        $(this).addClass("selected-tab");
         currentTab = "tab1";
     });
     $("#append").click(function () {
@@ -33,6 +38,7 @@ $(document).ready(function () {
 
         if (tabName) {
             var tabID = "tab" + tabCount; // 탭의 고유 ID 생성
+            tabs.push(tabID);
             //var editorID = "editor" + tabCount; // 고유한 editor ID 생성
 
             var newButton = $("<button>")
@@ -44,11 +50,13 @@ $(document).ready(function () {
             // 탭 버튼 내에 닫기 아이콘을 추가
             var closeIcon = $("<img>")
                 .attr("src", "images/Close.png")
+                .attr("id", "closeBtn")
                 .addClass("closeTab");
+
             newButton.append(closeIcon);
             $("#append").before(newButton); // 탭 버튼을 Default.c 버튼과 "+" 버튼 사이에 삽입
 
-            // 기존 탭 숨김 처리
+            // 탭 추가 후 기존 탭을 숨김
             $(".tabs > div").hide();
 
             var newTabDiv = $("<div>").attr("id", tabID).show(); // 새로운 탭의 div 태그 생성
@@ -58,12 +66,22 @@ $(document).ready(function () {
             newTabDiv.append(newEditorDiv); // 탭 div에 내용 div 추가
             $("#tab_console").before(newTabDiv); // 탭 div를 "tab_console" 태그 위에 추가
 
+            // 현재 탭 버튼 스타일 변경
+            $(".leftTab").removeClass("selected-tab");
+            newButton.addClass("selected-tab");
+
             // 새로운 탭 클릭 시 해당 탭 보여주기
-            newButton.click(function () {
-                $(".tabs > div").hide();
-                $(".footer").show();
-                newTabDiv.show();
-                currentTab = newTabDiv.attr("id");
+            newButton.click(function (e) {
+                if (e.target.id != "closeBtn") {
+                    $(".tabs > div").hide();
+                    $(".footer").show();
+                    newTabDiv.show();
+                    currentTab = newTabDiv.attr("id");
+
+                    // 현재 탭 버튼 스타일 변경
+                    $(".leftTab").removeClass("selected-tab");
+                    newButton.addClass("selected-tab");
+                }
             });
 
             var language = tabName.substring(tabName.lastIndexOf(".") + 1); // 탭 확장자로 language 설정
@@ -124,10 +142,32 @@ $(document).ready(function () {
 
 // 동적으로 생성된 closeIcon을 클릭했을 때 탭을 삭제
 $(".buttonbox-left").on("click", ".closeTab", function () {
-    var deleteIndexID = $(this).parent().attr("id");
-    var deleteTabID = deleteIndexID.substring(6);
+    deleteIndexID = $(this).parent().attr("id");
+    deleteTabID = deleteIndexID.substring(6);
+    // 현재 탭 버튼 스타일 변경
+    $("#" + deleteIndexID).removeClass("selected-tab");
     $("#" + deleteIndexID).remove();
     $("#" + deleteTabID).remove();
+
+    for (
+        var deleteIdxAtTabs = 0;
+        deleteIdxAtTabs < tabs.length;
+        deleteIdxAtTabs++
+    ) {
+        if (tabs[deleteIdxAtTabs] === deleteTabID) {
+            tabs.splice(deleteIdxAtTabs, 1);
+            break;
+        }
+    }
+    //탭 삭제 후 이전 탭을 보여줌
+    if (deleteTabID === currentTab) {
+        //console.log(currentTab);
+
+        currentTab = tabs[deleteIdxAtTabs - 1];
+
+        $("#" + currentTab).show();
+        $("#" + "index_" + currentTab).addClass("selected-tab");
+    }
 });
 
 function isValidTabName(tabName) {
