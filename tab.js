@@ -344,6 +344,7 @@ $("#btn_run").click(function () {
             $("#tab_console").show();
             if (response) $("#console_output").text(response.result);
             else $("#console_output").text("입력값을 확인해 주세요.");
+            console.log(response);
         },
         error: function (error) {
             console.error("전송 실패!");
@@ -437,10 +438,10 @@ function screenshot(e) {
     function save(canvas) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
-            formData.append("imageFile", blob, "test.jpg");
+            formData.append("file", blob, "test.jpg");
 
             $.ajax({
-                url: serverURL,
+                url: "http://13.209.237.234/ocr",
                 type: "POST",
                 data: formData,
                 processData: false,
