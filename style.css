@@ -171,6 +171,18 @@
     background-color: #d9d9d9;
     border-radius: 15px;
 }
+#reCaptureBtn {
+    height: 35px;
+    width: 120px;
+    background-color: #d9d9d9;
+    border-radius: 15px;
+}
+#ocrBtn {
+    height: 35px;
+    width: 120px;
+    background-color: #d9d9d9;
+    border-radius: 15px;
+}
 
 .modal-header {
     padding-bottom: 10px;

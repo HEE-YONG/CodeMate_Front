@@ -236,7 +236,7 @@ $("#clearBtn").click(function () {
     $(".modal-chat-content").empty();
 });
 
-$(".btn-close").click(function () {
+$(".btn-close-editor").click(function () {
     editorReadOnly.dispose();
 });
 
@@ -408,7 +408,7 @@ function screenshot(e) {
             width: width,
             height: height,
         }).then(function (canvas) {
-            save(canvas); // crop한 이미지 저장
+            checkCanvas(canvas); // crop한 이미지 처리
         });
         body.removeEventListener("mouseup", mouseup);
         // 마우스 커서 기본으로 변경
@@ -434,8 +434,30 @@ function screenshot(e) {
     }
     body.addEventListener("mousemove", mousemove);
 
-    // 캡쳐한 이미지 저장
-    function save(canvas) {
+    // 캡쳐한 이미지 확인
+    function checkCanvas(canvas) {
+        var secondModal = new bootstrap.Modal(
+            document.getElementById("imgCheckModal")
+        );
+
+        var canvasContainer = document.getElementById("canvasContainer");
+        canvasContainer.innerHTML = "";
+        canvasContainer.appendChild(canvas);
+
+        secondModal.show();
+        $("#reCaptureBtn").click(function () {
+            secondModal.hide();
+            //setTimeout(1000);
+            //$("#imgCheckModal").modal("hide");
+            screenshot();
+        });
+        $("#ocrBtn").click(function () {
+            funcOCR(canvas);
+            $("#imgCheckModal").modal("hide");
+        });
+    }
+    // 캡쳐한 이미지 ocr
+    function funcOCR(canvas) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
             formData.append("file", blob, "test.jpg");
