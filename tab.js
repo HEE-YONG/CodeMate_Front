@@ -445,16 +445,19 @@ function screenshot(e) {
         canvasContainer.appendChild(canvas);
 
         secondModal.show();
+
         $("#reCaptureBtn").click(function () {
             secondModal.hide();
             //setTimeout(1000);
             //$("#imgCheckModal").modal("hide");
             screenshot();
         });
-        $("#ocrBtn").click(function () {
-            funcOCR(canvas);
-            $("#imgCheckModal").modal("hide");
-        });
+        $("#ocrBtn")
+            .off()
+            .click(function () {
+                funcOCR(canvas);
+                $("#imgCheckModal").modal("hide");
+            });
     }
     // 캡쳐한 이미지 ocr
     function funcOCR(canvas) {
