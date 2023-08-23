@@ -344,6 +344,7 @@ $("#btn_run").click(function () {
             $("#tab_console").show();
             if (response) $("#console_output").text(response.result);
             else $("#console_output").text("입력값을 확인해 주세요.");
+            console.log(response);
         },
         error: function (error) {
             console.error("전송 실패!");
