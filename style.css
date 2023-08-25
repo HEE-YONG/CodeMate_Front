@@ -314,6 +314,24 @@
     white-space: pre-wrap;
 }
 
+#canvasContainer {
+    width: 535px;
+    overflow: auto;
+    margin-right: 15px;
+}
+
+#OCR_outputContainer {
+    padding-left: 15px;
+    border-left: 1.5px dashed white;
+}
+
+#ocr_copy img {
+    width: 25px;
+    height: 25px;
+    background-size: contain;
+    cursor: pointer;
+}
+
 /*************************** 스크린샷 css****************************/
 /* 캡쳐 시 배경 어둡게 */
 #screenshot_background {

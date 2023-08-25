@@ -448,15 +448,12 @@ function screenshot(e) {
 
         $("#reCaptureBtn").click(function () {
             secondModal.hide();
-            //setTimeout(1000);
-            //$("#imgCheckModal").modal("hide");
             screenshot();
         });
         $("#ocrBtn")
             .off()
             .click(function () {
                 funcOCR(canvas);
-                $("#imgCheckModal").modal("hide");
             });
     }
     // 캡쳐한 이미지 ocr
@@ -473,7 +470,7 @@ function screenshot(e) {
                 contentType: false,
                 success: function (response) {
                     console.log("전송 성공!");
-                    console.log(response);
+                    $("#OCR_output").text(response);
                 },
                 error: function (error) {
                     console.error("전송 실패!");
@@ -483,3 +480,19 @@ function screenshot(e) {
         }, "image/jpeg");
     }
 }
+
+$("#ocr_copy").click(function () {
+    var tempInputElement = document.createElement("textarea");
+    var ocr_output = document.getElementById("OCR_output");
+    tempInputElement.value = ocr_output.innerText;
+
+    document.body.appendChild(tempInputElement);
+    tempInputElement.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInputElement);
+});
+
+$("#ocr_close_btn").click(function () {
+    var ocr_output = document.getElementById("OCR_output");
+    ocr_output.innerText = "";
+});
